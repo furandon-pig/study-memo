@@ -1,0 +1,322 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue">しょうもないバグでも<br>えらい目にあうよ&#x1f97a;<br>という話。</font></div>
+
+[ゆるバグ](https://yurubug.connpass.com/event/174479/)(2020/04/29)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+@furandon_pig
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### これは一般の人が体験した<br>実話を再現したものです
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### ただし、登場する地名、団体名、<br>個人名などは、架空もしくは仮名であり<br>事実とは一切関係ありません&#x1f644;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## <ruby>消<rt>き</tr></ruby>える<ruby>設定<rt>せってい</rt></ruby>ファイル
+<br><br>
+　　　体験者<br>
+　　　　　　　　　　@furandon_pig(仮名)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 背景
+   * とあるアプライアンス製品。
+   * 設定用CLIを提供している。
+   * `show ... config` なコマンドで値を設定。
+   * `save ... config` なコマンドで値を保存。
+   * 設定値は内部のconfigファイルで保存される。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 発生していた怪奇現象
+   * 不意にマシンがリブートする。
+     * プロセス終了はwatchdog-timerで検知。
+     * リブート自体は想定通りの動作。
+   * が、特定のプロセスの異常終了理由が不明。
+   * 加えて、問題再現のタイミングがまちまち。
+     * 再現まで5分～2日という時間幅の広さ。
+   * show/saveを交互に実行していると再現する。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ソースコードの例(1/2)
+
+```c
+int show_any_config(void) {
+    FILE *fp = fopen("config.txt", "r");
+    if (fp) {
+        /* configを読みだして表示する */
+        fclose(fp);
+    }
+}
+
+int save_any_config(void) {
+    FILE *fp = fopen("config.txt", "w");
+    if (fp) {
+        /* ファイルにconfigを書き込む */
+        fclose(fp);
+    }
+}
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ソースコードの例(2/2)
+
+```c
+typedef struct config {
+    char *value;
+} config_t;
+
+int show_any_config(void) {
+    FILE *fp = fopen("config.txt", "r");
+    config_t config;
+    if (fp) {
+        fread(&config, sizeof(config_t), 1, fp);
+        puts(config.value); // ここで落ちている。
+        fclose(fp);
+    }
+}
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ファイルサイズが...ZERO...&#x1f632;
+
+```
+$ ls -l
+...
+-rw-r--r--    1 user  user     0  1 21 18:37 config.txt
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## configが空になっている...？&#x1f914;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# &#x1f928;
+
+```c
+int save_any_config(void) {
+    FILE *fp = fopen("config.txt", "w");
+```
+
+```
+NAME
+     fopen, fdopen, freopen, fmemopen -- stream open functions
+...
+     FILE *
+     fopen(const char * restrict path, const char * restrict mode);
+...
+     “w”     Open for writing.  The stream is position at
+             the beginning of the file.
+             Create the file if it does not exist.
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# &#x1f632;
+
+Open for writing. <span style="background-image: linear-gradient(transparent 30%, hotpink 30%);">The stream is position at the beginning of the file.</span> Create the file if it does not exist.
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+
+ * `fopen(..., "w")` なサンプル。
+
+```c
+#include <stdio.h>
+int main(void) {
+    FILE *fp = fopen("tmp.txt", "w");
+    if (fp)
+        fclose(fp);
+    return 0;
+}
+```
+
+ * 呼ばれているシステムコール。
+
+```sh
+$ ktruss ./sample
+...
+ 21906      1 sample   open("tmp.txt", 0x601, 0x1b6) = 3
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+ * `open(2)` の引数で指定されている値。
+
+```sh
+$ irb
+irb(main):001:0> printf("%016b\n", 0x601)
+0000011000000001
+...
+irb(main):002:0> printf("%016b\n", 0x1b6)
+0000000110110110
+```
+
+ * `0x0001` は `O_WRONLY` のようだ。
+
+```sh
+$ grep -B2 -A2 O_WRONLY /usr/include/sys/fcntl.h
+/* open-only flags */
+#define O_RDONLY        0x0000          /* open for reading only */
+#define O_WRONLY        0x0001          /* open for writing only */
+#define O_RDWR          0x0002          /* open for reading and writing */
+#define O_ACCMODE       0x0003          /* mask for above modes */
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+
+ * `0b011000000000` の値を調べてみる。
+
+```sh
+$ irb
+irb(main):001:0> printf("0x%04x\n", 0b010000000000)
+0x0400
+...
+irb(main):002:0> printf("0x%04x\n", 0b001000000000)
+0x0200
+```
+
+ * `0x400` と `0x200` に対応するマクロ定数。
+
+```sh
+$ egrep '0x0400|0x0200' /usr/include/sys/fcntl.h
+#define O_CREAT         0x0200          /* create if nonexistent */
+#define O_TRUNC         0x0400          /* truncate to zero length */
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+* `open(2)` における `O_TRUNC` の説明&#x1f62f;
+
+If O_TRUNC is specified and the file exists, <span style="background-image: linear-gradient(transparent 30%, hotpink 30%);">the file is truncated to zero length.</span>
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## つまり...&#x1f928;
+
+ * saveの実行時、ファイルが一瞬空になる。
+ * そのタイミングでのshow実行。
+   * 空ファイルが読まれ、NULL参照になる。
+ * <span style="background-image: linear-gradient(transparent 30%, hotpink 30%);">ファイルの競合状態に起因する問題だった。</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+不具合の解消方法
+ * ファイルロックしてから `fopen(3)` する&#x1f610;
+ * この方法で不具合は無事解消した。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+まとめ(不具合調査で得られた知見)
+ * 分かってしまえば(原因は)単純なものだった。
+ * (不具合の特定に一か月近く費やした...&#x1f97a;)
+ * 再現タイミングがまちまちな不具合。
+   * <span style="background-image: linear-gradient(transparent 30%, hotpink 30%);">競合状態に起因する不具合の可能性が高い。</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
