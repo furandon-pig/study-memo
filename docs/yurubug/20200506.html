@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>しょうもないバグでもえらい目に合うよという話。(その2)</title>
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue">しょうもないバグでも<br>えらい目にあうよ&#x1f97a;<br>という話。(その2)</font></div>
+
+[ゆるバグ2](https://yurubug.connpass.com/event/174913/)(2020/05/06)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+@furandon_pig
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### これは一般の人が体験した<br>実話を再現したものです
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### ただし、登場する地名、団体名、<br>個人名などは、架空もしくは仮名であり<br>事実とは一切関係ありません&#x1f644;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## <ruby>元<rt>もと</rt></ruby>に<ruby>戻<rt>もど</rt></ruby>る<ruby>設定値<rt>せっていち</rt></ruby>
+<br><br>
+　　　体験者<br>
+　　　　　　　　　　@furandon_pig(仮名)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 背景
+   * とある業務用システム。
+   * 複数のモジュールで構成されている。
+   * 各モジュールごとに担当チームを置いて開発。
+   * 新しいモジュールの追加作業時に遭遇したバグ。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 発生していた怪奇現象
+   * モジュールの有効・無効をフラグ変数で設定。
+     * フラグに1を設定すると機能が有効になる等。
+   * 手元の開発環境ではモジュール単体でテスト。
+     * 単体テスト時には想定通りの挙動。
+   * ステージング環境でのテスト。
+     * なぜかモジュールが有効にならない。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ソースコードの例
+
+```c
+// my_module.h
+extern int enable_my_module;
+```
+
+```c
+// my_module.c
+int enable_my_module = 0;
+
+int init_my_module(void) {
+    enable_my_module = 1;
+}
+```
+
+```c
+// 全体のmainモジュール
+int main(int argc, char *argv[]) {
+    // 各モジュールのinit_*_()な初期化処理が呼ばれる。
+    if (enable_my_module) { ... }
+}
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## もうちょっと詳しく見てみる
+
+ * 変数 `enable_my_module` の値を見てみる。
+   * 0に戻っているようだ&#x1f914;
+ * 単体テストでは1が設定されることを確認済み。
+   * 誰かが値を書き換えている？
+   * 他のモジュールでは問題は発生せず。
+   * `enable_my_module` を狙い撃ちで書き換え？
+ * gdbの `watch` で見てもよく分からず...&#x1f644;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## だれかが風の中で
+
+ * どこかで&nbsp;だれかが&nbsp;値を書き換えているはず...。
+
+## &#x1f9d0;
+
+```
+$ # (当時のデバッグ状況をもとに再現した例です)
+$ nm a.out
+...
+08049b00 B other_module_str
+08049b10 B enable_my_module
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 連続して配置されている変数
+
+ * 自分たちのモジュールが使用する変数。
+   * 直前に別の変数が配置されているようだ。
+
+```c
+#define MODULE_STR 16
+char other_module_str[MODULE_STR];
+
+int init_other_module(void) {
+    memset(other_module_str, 0, MODULE_STR+1);
+}
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 原因個所が判明&#x1f603;
+
+ * 変数が隣接して配置されていた。
+ * 直前の変数が1byte多くゼロクリアしていた。
+ * その1byte分が自分達のモジュール変数だった。
+   * 0がモジュールの無効を示す値だった。
+   * (0以外だったらバグに気づけなかったかも...)
+ * 該当モジュールの担当は別チームだった。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 修正依頼を出して対応完了&#x1f610;
+
+```c
+    memset(other_module_str, 0, MODULE_STR+1);
+　　　　↓
+    memset(other_module_str, 0, MODULE_STR);
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## このバグから得られた知見
+
+ * [前回の例](https://furandon-pig.github.io/study-memo/docs/yurubug/20200429.html)と同じく、ごく簡単なバグ。
+ * ただし、いくつかの要因で原因特定が難航。
+   * 別チームが開発したモジュールだったこと。
+   * 1byte余分なゼロ埋めだったこと。
+     * 自分達のモジュールでのみ問題発生。
+   * チーム内でのデバッグ状況の共有。
+ * (インフラの障害対応にも似ている感じ...)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## まとめ
+ * 遭遇したゆるいバグの紹介。
+   * 文字列操作に起因するバグ。
+ * 別モジュール起因のバグだと調査が難航しがち。
+   * 問題の切り分けが一段難しくなる印象。
+ * チーム開発ではデバッグ状況の共有も発生。
+   * サクサクと調査できない感ある。
+   * 説明のためにはしっかりとした知識が必要。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
