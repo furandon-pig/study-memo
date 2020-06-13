@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>ぬり絵アプリをHTML5で作ろう！</title>
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue">ぬり絵アプリを<br>HTML5で作ろう！</font></div>
+
+[Co-KoNPILe (ここんぱいる) #5](https://cokonpile.connpass.com/event/175698/)(2020/06/13)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+@furandon_pig<br>
+<span style="font-size:70%;">https://furandon-pig.github.io/study-memo/docs/cokonpile/20200613.html</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### きょうのおはなし
+
+ * HTML5でぬりえアプリを作成した話
+ * https://furandon-pig.github.io/nurie/
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 背景
+
+ * 新型コロナウイルス状況下でのStay Home
+ * 各企業によるStay Home施策
+ * その一つとして「ぬりえ」データの提供
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### ぬりえ
+
+ * [岩手さちこ](https://twitter.com/iwate_vtuber/status/1258950633794625537)
+ * [JR西日本](https://www.westjr.co.jp/fan/coloring/)
+ * [JR九州](https://www.jrkyushu.co.jp/train/playhome/)
+ * [三菱鉛筆](https://www.mpuni.co.jp/special/nurie.html)
+ * [キユーピー株式会社](https://www.kewpie.com/education/information/coloring/)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### PDFや画像でのぬりえデータ提供
+
+ * 印刷を前提としたデータ
+   * とはいえ印刷するのは少し面倒...
+ * よりお手軽にぬりえを楽しみたい...&#x1f914;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Webブラウザでぬりえが<br>できれば良さそう！&#x1f4a1;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### Webブラウザでぬりえアプリ
+
+ * 必要そうな技術要素
+   * HTML5 Canvas
+     * [Canvasに図形を描く](https://developer.mozilla.org/ja/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes)
+   * Event
+     * [mosemove event](https://developer.mozilla.org/ja/docs/Web/API/Element/mousemove_event)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## これならできそうだ！&#x1f603;<br>(フラグ)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### しかし、世界はそんなに甘くなかったのです...&#x1f62d;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ハマりどころ
+
+ * Canvasに直接描画だとダメ
+ * グレースケール画像。
+ * 二値化しよう(ただし閾値)
+ * マウスの座標取得(ただしスクロールを考慮)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Canvasに直接描画だとダメ
+
+ * [サンプル](https://furandon-pig.github.io/nurie/sample/sample01/index.html)
+ * 画像をCanvasにロードする。
+ * マウスイベントに応じてCanvasに描画。
+ * 描画色で下絵が塗り潰される...&#x1f62d;
+ * ごく当たり前の結果なので対応が必要。
+   * 下絵とぬりえの2つのCanvasで対応
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### グレースケール画像。
+
+ * [サンプル](https://furandon-pig.github.io/nurie/sample/sample02/index.html)
+ * ぬりえの下絵はPDF等をPNGに変換して利用
+ * 白・黒の二色ではない...&#x1f62d;
+   * PNG変換時に二値化する？
+   * ぬりえアプリ側で二値化する？
+ * 今回はぬりえアプリ側で二値化
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 補足：ぬりえアプリ側で二値化
+
+ * [サンプル](https://furandon-pig.github.io/nurie/sample/sample03/index.html)
+ * 下絵を変更しても対応できる
+   * 準備は単にPDFをPNGにするだけ
+   * 下絵を作成する際の手間が減る
+ * ただし適切な閾値は考慮が必要...&#x1f914;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### マウスの座標取得(ただしスクロールを考慮)
+
+ * ペン先とペンのサイズを表現したい
+   * マウスの座標が欲しい
+ * Webブラウザでのマウスの座標
+   * 単にEvent.{x,y}の取得だと問題がある
+   * スクロールすると値がずれる...&#x1f607;
+   * スクロール分を考慮した処理が必要
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * HTML5でぬりえアプリを作成する話
+ * Canvasで下絵・ぬりえを分けて処理する
+ * 二値化して下絵と塗り絵を合成する
+ * マウス座標の取得はスクロールの考慮が必要
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
