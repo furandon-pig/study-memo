@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>emacs+mhc(Message Harmonized Calendaring system)でスケジュール管理</title>
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue">emacs+mhcで<br>スケジュール管理</font></div>
+
+[Co-KoNPILe (ここんぱいる) #6](https://cokonpile.connpass.com/event/180113/)(2020/07/23)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+@furandon_pig<br>
+<span style="font-size:70%;">https://furandon-pig.github.io/study-memo/docs/cokonpile/20200613.html</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# スケジュール<br>管理ツール。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+PIM(Personal Information Manager)ツール
+
+ * [Garoon](https://garoon.cybozu.co.jp/product/schedule.html)
+ * Googleカレンダー
+ * Microsoft Outlook
+ * etc...
+                        </textarea>
+                    </section>
+
+
+                    <section data-markdown>
+                        <textarea data-template>
+### きょうのおはなし
+
+ * mhcの紹介
+ * mhcのデモ
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### mhcとは？
+
+ * [mhc](https://www.quickhack.net/mhc/)
+   * "Message Harmonized Calendaring system"
+   * [yoshinari-nomura/mhc](https://github.com/yoshinari-nomura/mhc)
+ * PIMツールのひとつ。
+ * Rubyで実装されている。
+ * emacsエディタと連携させた動作も可能。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 環境構築(その1)
+
+FreeBSDでの構築例。
+
+```shell
+$ sudo pkg install emacs ruby ruby26-gems
+$ sudo gem install mhc
+$
+$ mhc init ~/mhc
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 環境構築(その2)
+
+mhcのemacs用UIのインストール。
+
+```shell
+$ mkdir work
+$ cd work
+$ git clone https://github.com/yoshinari-nomura/mhc.git
+$ cp ~/work/mhc/samples/japanese-holidays.mhcc ~/mhc/presets/
+```
+
+`~/.emacs` に以下を追記する。
+
+```lisp
+(add-to-list 'load-path (expand-file-name "~/work/mhc/emacs"))
+(load-file (expand-file-name "~/work/mhc/emacs/mhc.el"))
+(autoload 'mhc "mhc" "Message Harmonized Calendar system." t)
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# 動作デモ
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 良く使うコマンド
+
+| コマンド | 機能 |
+| --- | --- |
+| C-. . | 今日の日付に移動する |
+| `E` | 予定を新規追加する |
+| `M` | 既存の予定を修正する |
+| `>` | 翌月の予定を表示する |
+| `<` | 前月の予定を表示する |
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### データファイルを眺めてみる
+
+```shell
+$ ls ~/mhc/spool/
+03F62408-CC98-11EA-AE50-C42C031CD19B.mhc        DFAA0A99-CC97-11EA-AE50-C42C031CD19B.mhc
+62B6CF82-CC98-11EA-AE50-C42C031CD19B.mhc        F0449169-CC97-11EA-AE50-C42C031CD19B.mhc
+B732E151-CC97-11EA-AE50-C42C031CD19B.mhc
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### データファイル(1件分)の内容
+
+```
+$ cat ~/mhc/spool/B732E151-CC97-11EA-AE50-C42C031CD19B.mhc
+X-SC-Subject: Co-KoNPILe (ここんぱいる) #6 - 海のような進捗発表会ともくもく懇親会
+X-SC-Location: オンライン
+X-SC-Day: 20200723
+X-SC-Time: 13:30-18:00
+X-SC-Category:
+X-SC-Priority:
+X-SC-Recurrence-Tag:
+X-SC-Cond:
+X-SC-Duration:
+X-SC-Alarm:
+X-SC-Record-Id: B732E151-CC97-11EA-AE50-C42C031CD19B
+X-SC-Sequence: 1
+
+https://cokonpile.connpass.com/event/180113/
+https://twitter.com/search?q=%23cokonpile
+```
+                        </textarea>
+                    </section>
+
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ちょっとした応用例
+
+ * `X-SC-*` なヘッダを含んだテキストファイル
+ * `X-SC-Record-Id` の値は `uuidgen` で生成可能
+ * スクリプト等で予定の追加・編集ができそう&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 応用例：Yahoo!天気をmhcに取り込む
+
+ * 天気の週間予報をmhc上で参照したい。
+ * Webスクレイピングでデータ取得、mhc登録。
+ * (実際のデモで試してみる)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * mhcの紹介
+   * emacs上で動作するPIMツール
+   * フォーマットはシンプルなので応用しやすい
+ * 応用例として天気の週間予報の取り込み
+
+みなさまもぜひmhcを使ってみてください！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
