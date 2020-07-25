@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Glideではじめるノンコードプログラミング</title>
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue">Glideではじめる<br>ノンコードプログラミング</font></div>
+
+[座駆動LT大会オンライン20200725](https://gbdaitokai.connpass.com/event/182090/)(2020/07/25)
+
+@furandon_pig<br>
+<span style="font-size:70%;">https://furandon-pig.github.io/study-memo/docs/zadrvnlt/20200725.html</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+ * [@furandon_pig](@furandon_pig)
+ * 岡山には行ったことは無いのですが、前に[岡山版 コロナウイルス対策サイト](https://okayama.stopcovid19.jp/)への[プルリク](https://github.com/stopcovid19-okayama/covid19/pull/185)を出したりしたことがあります。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日の内容
+
+ * Glideでアプリを作成する話
+ * Software Design 2020年7月号
+   * Code for Fuchuの紹介記事
+   * [府中お弁当プロジェクト](https://www.facebook.com/codeforfuchu/posts/2840483112710719/)
+   * [https://fuchubentomap.glideapp.io/](https://fuchubentomap.glideapp.io/)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Glideとは？
+
+ * [Glide](https://www.glideapps.com/)
+ * アプリケーション作成フレームワーク
+   * Googleシートをデータソースとして利用する
+   * UI部分はGlideで作成できる
+ * アプリの[テンプレート](https://www.glideapps.com/templates)も用意されている
+                        </textarea>
+                    </section>
+
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Glideの料金プラン
+
+ * Glideの[pricing](https://www.glideapps.com/pricing)
+ * Free,Pro,Organization,Enterpriseがある
+ * 試してみる分にはFreeプランでOK
+ * 加えてGoogleアカウントが必要
+   * GlideにSign inする際に使用する
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 実際にアプリを作ってみる
+
+ * ToDoアプリ
+ * 手順
+   * Googleシートを作成する
+   * 必要なカラムを用意する
+     * ステータス
+     * ToDo
+     * 日付
+
+実際に作成してみます&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### アプリの公開と削除
+
+ * Glideの「SHARE」ボタンをクリック
+   * ドメインが自動生成されてデプロイされる
+ * Glideのプロジェクト削除でアプリも削除される
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### アプリの公開
+
+<img src="20200725_glide_share.png" width="50%" height="50%">
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### スマートフォンでの表示例
+
+<img src="20200725_glideapp.jpg" width="25%" height="25%">
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### アプリの削除
+
+<img src="20200725_glide_delete.png" width="70%" height="70%">
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### さらに実用的なアプリを考えてみる
+
+ * connpassイベント確認アプリ
+   * connpass WebAPIと組み合わせる
+   * (少しだけ)コーディングが必要
+
+こちらも実際に作成してみます&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Glideでのアプリ作成
+
+ * UI部分はサクッと作成できる
+   * コーディングは一切不要
+ * データ部分
+   * Googleシートをデータソースとして使用
+   * データ設計の重要度が高まる感じ
+   * 必要に応じてコーディングが必要
+ * アプリとデータを分離して考えられる
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### より具体的な例で考えてみる
+
+ * [Go To トラベル事業  Q＆A集（７月22日時点）](https://www.mlit.go.jp/kankocho/content/001354719.pdf)
+ * (こちらも実際に作成してみます)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### データの整理が重要
+
+ * データが整理されていればいるほど、Glideでの扱いがラクになる
+ * 「ノンプログラミング」&#x1f914;
+   * UIまわりでは不要
+   * データの取得・加工・整備でのプログラミング
+     * 必要かつより重要になってくる
+     * ヘンテコなデータ構造だとGlide側に無理が生じる
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Glideでアプリ化するということ
+
+ * 一定の機能範囲内であればGlideでアプリ化するのは便利
+   * データ構造を整理(設計)することがポイント
+ * Glideでアプリ化するということ
+   * オープンデータとの組み合わせによる効果が期待できる
+     * オープンデータが活用される
+     * ちゃんとデータが整理されるようになる
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### データの整理に関して
+
+ * [５スターオープンデータについて](https://www.soumu.go.jp/main_content/000353999.pdf)(総務省)(pdf)
+   * オープンデータの公開レベルをレベル1～レベル5までの5段階に定めたもの。
+   * 機械判読のしやすさでランク付け。
+ * 「レベル2」のオープンデータ
+   * Glideから利用できる形態
+   * データを加工(変形)してレベル2にするのもアリ
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Glideでのアプリ化を通じて<br>オープンデータの<br>利活用を促進できそう！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * Glideによるノンプログラミングでのアプリ作成
+   * 具体的なアプリ作成例
+ * データの取得・加工
+   * プログラミングの余地が残る
+ * データ構造の整理整頓がポイント
+ * オープンデータの利活用促進につながるかも
+
+みなさまもぜひGlideを通じて、面白いデータ、<br>有用なデータのアプリ化を試してみてください！
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
