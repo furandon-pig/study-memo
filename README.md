@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [合同勉強会 in 大都会岡山](https://gbdaitokai.connpass.com/)
+   * [Glideではじめるノンコードプログラミング](https://furandon-pig.github.io/study-memo/docs/zadrvnlt/20200725.html)
  * [FreeBSD勉強会](https://freebsdstudy.connpass.com/)
    * [第83回FreeBSD勉強会メモ](docs/FreeBSDStudy/20200625.md)
  * [Co-KoNPILe (ここんぱいる)](https://cokonpile.connpass.com/)
