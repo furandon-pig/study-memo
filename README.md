@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [タガヤス](https://tagayas.connpass.com/)
+   * [How to オンライン勉強会へのバ美肉参加](https://furandon-pig.github.io/study-memo/docs/tagayas/20200728.html)
  * [合同勉強会 in 大都会岡山](https://gbdaitokai.connpass.com/)
    * [Glideではじめるノンコードプログラミング](https://furandon-pig.github.io/study-memo/docs/zadrvnlt/20200725.html)
  * [FreeBSD勉強会](https://freebsdstudy.connpass.com/)
