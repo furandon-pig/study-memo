@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [AWS CloudShell おもしろ選手権](https://connpass.com/event/199259/)
+   * [AWS CloudShellでLeaf Rogueを動かす話](https://furandon-pig.github.io/study-memo/docs/omoshiro_cloudshell/20201229.html)
  * [さくらインターネット 東京](https://sakura-tokyo.connpass.com/)
    * [おこづかいで運用するFreeBSD Jail on さくらのVPS](https://furandon-pig.github.io/study-memo/docs/sakura-tokyo/20200806.html)
  * [タガヤス](https://tagayas.connpass.com/)
