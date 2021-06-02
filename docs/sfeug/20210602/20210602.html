@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Fabric.jsでセリフ書き込みアプリを作ってみました</title>
+
+        <meta property="og:url" content="https://furandon-pig.github.io/study-memo/docs/sfeug/20210602/20210602.html" />
+        <meta property="og:title" content="Fabric.jsでセリフ書き込みアプリを作ってみました" />
+        <meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/sfeug/ogp.png" />
+        <meta property="og:description" content="「sfeug/20210602/20210602.html」での発表資料です。" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">Fabric.jsで<br>セリフ書き込みアプリを<br>作ってみました&#x1f603;</font></div>
+
+[Sendai Frontend Meetup #6](https://sfeug.connpass.com/event/212239/)(2021/06/02)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### セリフ書き込みアプリ
+
+ * つい先日の話...。
+ * https://twitter.com/youko_rou/status/1398537759053127682
+
+> セリフ部分に生き物の雑学を入れてご自由にお使い下さい:D
+
+ * 入力を楽にするアプリがあると良さそう&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 作成してみました&#x1f603;
+
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日のお話
+
+ * [Fabric.js](http://fabricjs.com/)
+ * セリフ書き込みアプリ作成における、Fabric.jsのノウハウ紹介。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Fabric.js
+
+ * [Fabric.js](http://fabricjs.com/)
+   *  Fabric.js is a powerful and simple Javascript HTML5 canvas library
+ * [Demos](http://fabricjs.com/demos/)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Fabric.jsのサンプル
+
+ * [Fabric.js サンプル01](https://furandon-pig.github.io/mmr-kitsune-san/sample/01/)
+ * 簡単に図形を描画できる。
+ * 操作用のハンドルが付いている。
+   * 移動・拡大縮小が可能。
+ * テキストや画像も容易に扱える。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## Fabric.jsを使えば簡単にアプリが作れそう！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## しかし、現実は常に厳しいものだったのです...&#x1f97a;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### サンプル02：背景が動いてしまう
+
+ * [Fabric.js サンプル02](https://furandon-pig.github.io/mmr-kitsune-san/sample/02/)
+ * `Fabric.Image` は通常だと操作できてしまう。
+   * 背景画像は固定しておきたい。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 背景画像を固定する
+
+```javascript
+this.cvs = new fabric.Canvas('cvs');
+this.img = document.getElementById('bg');
+this.img.src = image_url;
+this.img.onload = function() {
+    vm.bg = new fabric.Image(vm.img, {
+        left: 0,
+        top: 0,
+        hasControls: false,
+        lockMovementX: true,
+        lockMovementY: true,
+        lockRotation: true,
+        lockScalingFlip: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockSkewingX: true,
+        lockSkewingY: true,
+        evented: false,
+    });
+};
+vm.cvs.add(vm.bg);
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### サンプル03：オブジェクトを複数選択
+
+ * [Fabric.js サンプル03](https://furandon-pig.github.io/mmr-kitsune-san/sample/03/)
+ * 背景は固定できたけど、背景画像も操作できてしまう場合がある…。
+ * オブジェクトを複数選択した場合に発生するようだ。
+   * 背景画像は固定する設定にしているので、逆に変な振る舞いになってしまう。
+ * 加えて、Z-indexもちょっと変。
+   * 背景画像は常に最背面に配置された状態にしたい。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 背景画像を操作できないようにする
+
+```javascript
+      vm.bg = new fabric.Image(vm.img, { ... });
+
+      vm.bg.setControlVisible('tl', false);
+      vm.bg.setControlVisible('tr', false);
+      vm.bg.setControlVisible('br', false);
+      vm.bg.setControlVisible('bl', false);
+      vm.bg.setControlVisible('ml', false);
+      vm.bg.setControlVisible('mt', false);
+      vm.bg.setControlVisible('mr', false);
+      vm.bg.setControlVisible('mb', false);
+      vm.bg.setControlVisible('mtr', false);
+
+      vm.cvs.add(vm.bg);
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 背景画像を最背面に配置する
+
+```javascript
+    this.cvs = new fabric.Canvas('cvs');
+    this.cvs.on({
+       'selection:created': function(obj) {
+        if (1 < obj.selected.length) {
+          // 複数のオブジェクト選択が行われたので、
+          // 背景画像のZindexを調整する。
+          vm.cvs.discardActiveObject();
+          vm.cvs.renderAll();
+          vm.bg.moveTo(-9999);
+        }
+      },
+    });
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## 必要な処理が実装できた！&#x1f603;
+
+ * [Fabric.js サンプル04](https://furandon-pig.github.io/mmr-kitsune-san/sample/04/)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### さらに機能拡張
+
+ * クエリパラメータ `id=<画像番号>` で画像を選択できるようにする。
+ * これで汎用的なセリフ書き込みアプリとして利用できそう。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### その他
+
+ * オブジェクトの削除処理をインチキな方法で行っている。
+   * イベントでコールバックされるオブジェクトと削除したいオブジェクトの突合せ部分がトリッキーな方法になっている。
+   * [Custom controls](http://fabricjs.com/custom-control-render)を使用するのが良さそう。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)を作成してみました。
+ * [Fabric.js](http://fabricjs.com/)のノウハウ紹介。
+ * 背景画像の固定方法。
+   * `fabric.Image()` に `lock*: true` を指定する。
+ * オブジェクト操作用のハンドルを無効化する。
+   * `setControlVisible(..., false)` を設定する。
+ * 背景画像のZ-indexを調整する。
+
+```javascript
+vm.cvs.discardActiveObject();
+vm.cvs.renderAll();
+vm.bg.moveTo(-9999);
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

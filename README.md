@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [Sendai Frontend Meetup #6](https://sfeug.connpass.com/event/212239/)
+   * [Fabric.jsでセリフ書き込みアプリを作ってみました..](https://furandon-pig.github.io/study-memo/docs/sfeug/20210602/20210602.html)
  * [AWS CloudShell おもしろ選手権](https://connpass.com/event/199259/)
    * [AWS CloudShellでLeaf Rogueを動かす話](https://furandon-pig.github.io/study-memo/docs/omoshiro_cloudshell/20201229.html)
  * [さくらインターネット 東京](https://sakura-tokyo.connpass.com/)
