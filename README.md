@@ -2,7 +2,7 @@
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
  * [KidsとオトナのコンピュータとのかかわりLT会](https://36tech.connpass.com/event/212874/)
-   * [シェルスクリプトで手早くテキスト処理しよう！](https://furandon-pig.github.io/https://furandon-pig.github.io/study-memo/docs/36tech/20210619/20210619.html)
+   * [シェルスクリプトで手早くテキスト処理しよう！](https://furandon-pig.github.io/study-memo/docs/36tech/20210619/20210619.html)
  * [Sendai Frontend Meetup #6](https://sfeug.connpass.com/event/212239/)
    * [Fabric.jsでセリフ書き込みアプリを作ってみました..](https://furandon-pig.github.io/study-memo/docs/sfeug/20210602/20210602.html)
  * [AWS CloudShell おもしろ選手権](https://connpass.com/event/199259/)
