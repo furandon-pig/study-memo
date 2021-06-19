@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>シェルスクリプトで手早くテキスト処理しよう！</title>
+
+        <meta property="og:url" content="https://furandon-pig.github.io/https://furandon-pig.github.io/study-memo/docs/36tech/20210619/20210619.html" />
+        <meta property="og:title" content="シェルスクリプトで手早くテキスト処理しよう！" />
+        <meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/36tech/ogp.png" />
+        <meta property="og:description" content="「KidsとオトナのコンピュータとのかかわりLT会」での発表資料です。" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">シェルスクリプトで<br>手早くテキスト処理しよう！</font></div>
+
+[KidsとオトナのコンピュータとのかかわりLT会](https://36tech.connpass.com/event/212874/)(2021/06/19)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Scratchによるプログラミング
+
+ * [金種表の計算](https://scratch.mit.edu/projects/508702223/)
+ * [逆ポーランド記法の計算機](https://scratch.mit.edu/projects/508720914/)
+
+#### 実用的なアプリも作成できそう！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### とは言うものの…
+
+ * テキスト(文字列)の処理はちょっと面倒…&#x1f62f;
+
+<img src="36tech_img01.png" width="80%" height="80%">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日のお話
+
+ * 「シェルスクリプト」の簡単な紹介。
+   * テキスト処理が手早くできるよ。
+   * ちょっとしたプロトタイプの作成に便利。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### シェルスクリプトって何？
+
+ * シェル
+   * OS(オペレーティングシステム)と人間がやり取りするためのインタフェースです。
+   * Linux,macOS,WindowsなどのOSがあります。
+ * 一連のやりとりを記述したものがシェルスクリプトになります。 
+ * Raspberry Piの「ターミナル」等からシェルを触ることができます。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### シェルスクリプトの例
+
+ * 今日の曜日を表示してみます。
+
+```sh
+$ date
+2021年  6月 19日 土曜日 13:33:10 JST
+$
+$ echo "今日は`date | awk '{ print $4 }'`です。"
+今日は土曜日です。
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## Scratchの場合
+
+<img src="36tech_img02.png">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## テキスト処理ならシェルスクリプトが便利
+
+ * 一見難しそうに見えるけど、覚えるコマンドは十数個くらい。
+ * コマンドをブロックのようにつなぎ合わせて処理します。
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## よく使うコマンド
+
+| コマンド | 説明 |
+| --- | --- |
+| `cat` | ファイルの中身を出力 |
+| `awk` | 特定のフィールドを出力(*1) |
+| `cur` | 特定の区切り文字で分割 |
+| `sort` | テキストを行ごとにソート |
+| `uniq` | 重複行を除去 |
+| `grep` | 特定のパターンで行を抜き出す |
+
+ * `*1` : ホントはawk単体でプログラミング言語として利用できます。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## シェルスクリプトの簡単なサンプル
+
+ * 献立表からメニューを抜き出してみる
+ * [石狩市 6月予定献立表](https://www.city.ishikari.hokkaido.jp/soshiki/kyuusyoku/33703.html)
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 献立表のダウンロード
+
+```sh
+$ sudo apt install xpdf
+$ curl -sLO 'https://www.city.ishikari.hokkaido.jp/uploaded/attachment/37676.pdf'
+$ pdftotext 37676.pdf
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### メニューを抜き出してみる
+
+```sh
+$ grep -A4 '[０-９]日' 37676.txt \
+    | paste - - \
+    | sed \
+        -e "s/（.*）//g" \
+        -e "s/(.*)//" \
+    | grep 日
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 実行結果
+
+ * 献立表が取得できた！&#x1f603;
+   * (ちゃんとパースできてないものもいくつかあるけど...)
+
+```sh
+１日,きつねうどん
+２日,豚丼
+３日,ブラウンシチュー
+４日,ごはん
+７日,イエスクリーン米
+８日,担々麺
+１１日,ごはん
+１８日,豆腐の中華煮
+２１日,きのこ汁
+２２日,ピリ辛野菜ラーメン
+２３日,ごはん
+２４日,タコス風ミート
+２５日,ごはん
+１５日,チキントマト
+１４日,ごはん
+１０日,やさいスープ
+１７日,
+--,９日
+１６日,
+２８日,かぼちゃ団子汁
+２９日,カレーうどん
+３０日,ビビンバ丼
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * シェルスクリプトによるテキスト処理の紹介。
+ * シェルスクリプトは手元にRaspberry PiやmacOSがあればすぐに試すことができます。
+ * 一見難しそうだけど、実際は機能毎のコマンドをつなぎ合わせる感じ。
+ * ぜひシェルスクリプトプログラミングを試してみてください！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
