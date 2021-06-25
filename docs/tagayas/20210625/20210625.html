@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DockerでLinuxデスクトップ元年をはじめよう！</title>
+
+        <meta property="og:url" content="https://furandon-pig.github.io/study-memo/docs/tagayas/20210625/20210625.html" />
+        <meta property="og:title" content="DockerでLinuxデスクトップ元年をはじめよう！" />
+        <meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/tagayas/20210625/ogp.png" />
+        <meta property="og:description" content="「【タガヤス その21】「クラウドって何？」からAWSの概要まで + 私のこだわり発表会」での発表資料です。" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">Dockerで<br>Linuxデスクトップ元年を<br>はじめよう！&#x1f603;</font></div>
+
+[【タガヤス その21】「クラウドって何？」からAWSの概要まで + 私のこだわり発表会](https://tagayas.connpass.com/event/215023/)(2021/06/25)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日のお話
+
+<font style="font-size:480%">&#x1f433;</font>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# Docker。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Dockerによる開発環境構築
+
+ * Dockerfile,Dockerイメージで簡単にアプリ開発環境の構築が可能。
+ * macOSでもDocker Desktopを利用すればOK。
+
+```sh
+$ docker pull centos:7
+$ docker images
+REPOSITORY  TAG  IMAGE ID      CREATED       SIZE
+centos      7    8652b9f0cb4c  7 months ago  204MB
+$
+$ docker run -ti --rm 8652b9f0cb4c bash
+[root@88dc4ab5eab1 /]#
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### コンテナの活用
+
+ * 特定用途に環境を分けたいですぞ...&#x1f914;
+   * 勉強会での発表用
+   * インストールしたてのWebブラウザの利用
+   * GUIアプリをお試して動かしてみる
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# &#x1f914;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## VNCを使おう！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## VNCとは？
+
+ * [Virtual Network Computing](https://ja.wikipedia.org/wiki/Virtual_Network_Computing)の略。
+   * リモートデスクトップを実現する機能。
+   * Windowsのリモートデスクトップと似たようなものです。
+ * コンテナ内でVNCサーバを起動し、ホスト側から接続すれば良さそう。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Dockerfileを用意する
+
+```
+FROM centos:7
+
+LABEL maintainer "furandon_pig"
+
+RUN yum update -y \
+    && yum install -y epel-release \
+    && yum install -y \
+        sudo \
+        git \
+        vim-minimal \
+        vim-enhanced \
+        tigervnc-server \
+        tigervnc \
+        mate-desktop \
+        mate-settings-daemon \
+        mate-terminal \
+        mate-themes \
+        mate-icon-theme \
+        caja \
+        mousepad \
+        ipa-gothic-fonts \
+        ipa-mincho-fonts \
+        ipa-pgothic-fonts \
+        ipa-pmincho-fonts \
+        vlgothic-fonts \
+        vlgothic-p-fonts \
+        sazanami-fonts-common \
+        ibus-anthy \
+        screen \
+        firefox
+
+COPY files/passwd /tmp
+RUN mkdir -p /root/.vnc \
+    && echo '#!/bin/sh' >> /root/.vnc/xstartup \
+    && echo 'export LANG=ja_JP.UTF-8' >> /root/.vnc/xstartup \
+    && echo 'export LC_ALL=$LANG' >> /root/.vnc/xstartup \
+    && echo 'unset SESSION_MANAGER' >> /root/.vnc/xstartup \
+    && echo 'unset DBUS_SESSION_BUS_ADDRESS' >> /root/.vnc/xstartup \
+    && echo 'export GTK_IM_MODULE=ibus' >> /root/.vnc/xstartup \
+    && echo 'export XMODIFIERS=@im=ibus' >> /root/.vnc/xstartup \
+    && echo 'export QT_IM_MODULE=ibus' >> /root/.vnc/xstartup \
+    && echo 'ibus-daemon --daemonize --xim' >> /root/.vnc/xstartup \
+    && echo 'exec mate-session' >> /root/.vnc/xstartup \
+    && chmod +x /root/.vnc/xstartup \
+    && cp /tmp/passwd /root/.vnc/passwd \
+    && mkdir -p /var/lib/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Dockerイメージのビルド
+
+```
+$ docker build -t tagayas-20210625 .
+$ docker images
+REPOSITORY        TAG     IMAGE ID      CREATED         SIZE
+tagayas-20210625  latest  62c00f1af4ba  41 seconds ago  967MB
+centos            7       8652b9f0cb4c  7 months ago    204MB
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### コンテナを作成する
+
+ * `--ipc=hose` オプションが重要。
+ * https://twitter.com/furandon_pig/status/1390509465124835331
+
+```
+$ docker \
+    run \
+    -ti \
+    --rm \
+    --name tagayas-01 \
+    -p 6901:5901 \
+    --ipc=host \
+    tagayas-20210625 \
+    bash
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### あとはVNCサーバを起動するだけ
+
+```
+[root@c7db8ac8ab05 /]# vncserver
+
+You will require a password to access your desktops.
+
+Password:
+Verify:
+Would you like to enter a view-only password (y/n)? n
+...
+[root@c7db8ac8ab05 /]# ss -a | grep ^tcp
+tcp    LISTEN     0      128     *:6001                  *:*
+tcp    LISTEN     0      5       *:5901                  *:*
+tcp    LISTEN     0      128      [::]:6001                   [::]:*
+tcp    LISTEN     0      5        [::]:5901                   [::]:*
+```
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### さっそくVNCで接続してみましょう
+
+<img src="tagayas01.png">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### Linuxデスクトップ画面！&#x1f603;
+
+<img src="tagayas02.png" width="80%" height="80%">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### 個別にLinuxデスクトップが作成可能！
+
+ * vncserver起動後にコンテナからデタッチ。
+ * VNCポートはコンテナ毎にずらす工夫が必要。
+ * AWSのEC2+Dockerといった応用も可能。
+   * VDI(仮想デスクトップ基盤)的な感じ。
+   * ただしストレージサイズ(デフォルト8GiB？)に注意が必要。
+ * さくらのVPSを使うのもおススメ。
+   * 2CPU+1GiBな構成で月額900円くらい。
+   * (定額なのがポイント&#x1f603;)。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * DockerとVNCを組み合わせてLinuxデスクトップを使う方法を紹介。
+ * macOSにはVNCクライアント機能が組み込まれているのでラク。
+ * GUI込みで作業環境を切り出せる。
+ * FreeBSD JailというDockerと同等の機能を提供するコンテナ機構もあるのでぜひ&#x1f603;
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
