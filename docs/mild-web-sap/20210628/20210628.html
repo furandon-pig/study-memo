@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SlackのBlock Kit Builderを試してみる</title>
+
+        <meta property="og:url" content="https://furandon-pig.github.io/study-memo/docs/mild-web-sap/20210628/20210628.html" />
+        <meta property="og:title" content="DockerでLinuxデスクトップ元年をはじめよう！" />
+        <meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/mild-web-sap/20210628/ogp.png" />
+        <meta property="og:description" content="「ゆるWeb勉強会@札幌 OnLine #13」での発表資料です。" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">Slackの<br>Block Kit Builderを<br>試してみる</font></div>
+
+[ゆるWeb勉強会@札幌 OnLine #13](https://mild-web-sap.connpass.com/event/214866/)(2021/06/28)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日のお話
+
+SlackのBlock Kit Builderについて話そうと思います&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Slack
+
+<img src="mws01.png">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Slack Bot
+
+ * ビルド、テストといった、定型的な処理の実行
+ * 特定のキーワードに反応して、決められた処理を実行する
+ * 基本的にはその都度実行して完了するような処理に向いている
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Botの実行
+
+特定のキーワードやパターンにマッチさせてBotから処理を実行する。
+
+```
+@build_bot ブランチ fix_any_bug をビルドして。
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+だがしかし、その都度キーワードを入力するのはちょっと面倒だったりもしますぞ...&#x1f914;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Slack Block Kit Builder
+
+ * [Block Kit Builder](https://app.slack.com/block-kit-builder/)
+ * チェックボタンやラジオボタン、ドロップダウンリストといったUI作成を容易にするツール
+ * UIはJSONで表現され、incoming Webhook経由でSlackに送信するとチャンネルにUIが表示される
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="mws02.PNG">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### UIのJSON定義例
+
+```
+{
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "This is a section block with a button."
+      },
+      "accessory": {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Click Me",
+          "emoji": true
+        },
+        "value": "click_me_123",
+        "action_id": "button-action"
+      }
+    }
+  ]
+}
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Slack BotとUIを組み合わせる
+
+ * incoming WebhookとUI(JSON)を組み合わせる
+ * SlackからはInteractive Componentsでリクエストが飛んでくる
+ * これにより、インタラクティブなSlack Botを作成できる
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 必要な設定
+
+ * Slackの[Your Apps](https://api.slack.com/apps)から設定する
+ * 今回はスラッシュコマンドを起点としてBotとやりとりするサンプルです
+
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### スラッシュコマンドの設定(その1)
+
+<img src="mws05.PNG">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### スラッシュコマンドの設定(その2)
+
+<img src="mws06.PNG">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### Interactivity & Shortcutsの設定
+
+<img src="mws04.PNG">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+#### Incoming Webhooksの設定
+
+<img src="mws03.PNG">
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### これでSlack側での準備はOK
+
+ * Request URLで設定したエンドポイントにSlackからリクエストが飛んでくる
+ * 今回はRuby+Sinatraでサンプルを作成
+ * 今回のサンプル
+   * [ドミノピザのメニュー](https://www.dominos.jp/menu)
+   * ピザのメニュー選択Bot(仮)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### コードサンプル
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 動作デモ
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * SlackのBlock Kit Builderを試してみました。
+   * UIはJSONで記述する。
+ * Incoming WebhooksとIncoming Componentsを設定する
+ * Slackからリクエストが飛んでくるので、UI(JSON)をWebhookで返す
+   * 今回はERBでJSONを生成したけどイマイチ面倒...
+   * Object.to_jsonする形の方が良いかも&#x1f97a;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
