@@ -2,7 +2,7 @@
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
  * [ゆるWeb勉強会@札幌 OnLine #13](https://mild-web-sap.connpass.com/event/214866/)
-   * [DockerでLinuxデスクトップ元年をはじめよう！](https://furandon-pig.github.io/study-memo/docs/mild-web-sap/20210628/20210628.html)
+   * [SlackのBlock Kit Builderを試してみる](https://furandon-pig.github.io/study-memo/docs/mild-web-sap/20210628/20210628.html)
  * [KidsとオトナのコンピュータとのかかわりLT会](https://36tech.connpass.com/event/212874/)
    * [シェルスクリプトで手早くテキスト処理しよう！](https://furandon-pig.github.io/study-memo/docs/36tech/20210619/20210619.html)
  * [Sendai Frontend Meetup #6](https://sfeug.connpass.com/event/212239/)
