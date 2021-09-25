@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [IoT縛りの勉強会! IoTLT](https://iotlt.connpass.com/)
+   * [Tinkercadを使った電子工作でLチカの壁を越えよう！](https://furandon-pig.github.io/study-memo/docs/iotlt/20210925/20210925.html)
  * [ゆるWeb勉強会@札幌 OnLine #13](https://mild-web-sap.connpass.com/event/214866/)
    * [SlackのBlock Kit Builderを試してみる](https://furandon-pig.github.io/study-memo/docs/mild-web-sap/20210628/20210628.html)
  * [KidsとオトナのコンピュータとのかかわりLT会](https://36tech.connpass.com/event/212874/)

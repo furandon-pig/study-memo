@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Tinkercadを使った電子工作でLチカの壁を越えよう！</title>
+
+		<meta property="og:url" content="https://furandon-pig.github.io/study-memo/docs/iotlt/20210925/20210925.html" />
+		<meta property="og:title" content="Tinkercadを使った電子工作でLチカの壁を越えよう！" />
+		<meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/iotlt/20210925/ogp.png" />
+		<meta property="og:description" content="「盛岡版IoT縛りの勉強会！わんこそばIoTLT盛岡 Vol.12 @オンライン」での発表資料です。" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+  <style>
+    .my_marker {
+      background-image: linear-gradient(transparent 40%, rgb(255, 240, 130) 40%);
+    }
+  </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">Tinkercadを使った電子工作で<br>Lチカの壁を越えよう！&#x1f603;</font></div>
+
+[盛岡版IoT縛りの勉強会！IoTLT盛岡 Vol.12](https://iotlt.connpass.com/event/224199/)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="img/computer_one-board_microcomputer.png" width="50%" height="50%"><br>
+ワンボードマイコン。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ワンボードマイコンで電子工作
+
+ * ArduinoにLEDを接続
+ * スケッチでGPIOを操作
+ * これだけでLチカ(LEDチカチカ)が完成
+
+電子工作をドンドン進めていこう！
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="img/gekijou_end_fin.png" width="50%" height="50%"><br>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### LED、光ったら満足しちゃう問題。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### LED、光ったら満足しちゃう問題。
+
+ * 電子工作、ワンボードマイコン、はてはFPGAでもとりあえず「Lチカ」
+ * 最初の一歩としては最適な題材
+ * では、Lチカの次のステップは...？
+                        </textarea>
+                    </section>
+
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="img/denshi_transistor.png" width="50%" height="50%"><br>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### いきなり！ハードウェア
+
+ * Lチカの次のステップでいきなりハードルが上がる...&#x1f97a;
+ * LEDは単に接続すれば良いけど、他のハードウェア(電子部品)ではデータシートを参照する必要がある
+ * 学習が容易な電子部品を見つけたいけど、どれがそうなのだろう？
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### LEDを光らせても、結局その次の<br>ステップがよくわからない...&#x1f62d;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="img/tinkercad.png" width="70%" height="70%"><br>
+<a href="https://www.tinkercad.com/" target="_blank">https://www.tinkercad.com/</a>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Tinkercad
+
+ * Webブラウザで動作するCAD
+   * 3Dモデリングや電子回路図が作成できる
+   * <strong><font color="hotpink">電子回路のシミュレーション機能がある！</font></strong>
+ * 電子回路図の作成
+   * 抵抗、LEDやタクトスイッチ等、電子工作で使用する基本的な部品が揃っている
+   * AND,OR,NOT回路といった、いわゆるロジックICと呼ばれる電子部品も揃っている
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 電子工作の練習に最適！&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<img src="img/L_chika.png" width="60%" height="60%"><br>
+Lチカ。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+<!--
+<table border="0">
+  <tr>
+    <td>
+      <img src="img/img_74HC08.png" width="60%" height="60%" style="transform: rotate(-90deg);">
+    </td>
+    <td>
+      <img src="img/and_circuit.png" width="70%" height="70%">
+    </td>
+  </tr>
+</table>
+-->
+<img src="img/img_74HC08.png" width="20%" height="20%" style="transform: rotate(-90deg);vertical-align: middle;">
+<img src="img/and_circuit.png" width="70%" height="70%" style="vertical-align: middle;"><br>
+AND回路のサンプル。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### ロジックICのデータシート
+
+ * 東芝CMOSデジタル集積回路
+   * [TC74HC08](https://toshiba.semicon-storage.com/info/docget.jsp?did=7496&prodName=TC74HC08AP)(ANDゲート)
+   * [TC74HC32](https://toshiba.semicon-storage.com/info/docget.jsp?did=15799&prodName=TC74HC32AF)(ORゲート)
+   * [TC74HC02](https://toshiba.semicon-storage.com/info/docget.jsp?did=6965&prodName=TC74HC02AP)(NORゲート)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+ * LED、光ったら満足しちゃう問題。
+   * LEDを光らせた次のステップが必要
+ * Tinkercadによる電子回路の作成＋シミュレート
+ * お手軽に電子回路の作成練習ができる&#x1f642;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## おまけ
+
+Tinkercadのデモ。
+                        </textarea>
+                    </section>
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
