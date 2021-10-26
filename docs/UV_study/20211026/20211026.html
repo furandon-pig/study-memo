@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Amazon RDS＋PostgreSQLで指定可能なengine-versionを見つけよう！</title>
+
+		<meta property="og:url" content="https://furandon-pig.github.io/study-memo/docs/UV_study/20211026/20211026.html" />
+		<meta property="og:title" content="" />
+		<meta property="og:image" content="https://furandon-pig.github.io/study-memo/docs/UV_study/20211026/ogp.png" />
+		<meta property="og:description" content="「PostgreSQL LT会@オンライン」での発表資料です。" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@furandon_pig" />
+
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="/study-memo/reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/study-memo/reveal.js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                h1,h2,h3,h4,h5 {
+                    text-transform: none;
+                }
+                h2 { text-transform: none; }
+                </style>
+  <style>
+    .my_marker {
+      background-image: linear-gradient(transparent 95%, hotpink 40%);
+    }
+  </style>
+	</head>
+	<body>
+
+            <div class="reveal">
+                <div class="slides">
+                    <section data-markdown>
+                        <textarea data-template>
+## <div style="border: thin solid; border-radius: 8px; padding: 8px; background: white;"><font color="midnightblue" style="text-transform:none;">Amazon RDS＋PostgreSQLで<br>指定可能な<br>engine-versionを見つけよう！</font></div>
+
+[PostgreSQL LT会@オンライン ](https://uniquevision.connpass.com/event/227223/)
+
+<!--
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="40" height="40">&nbsp;
+-->
+[@furandon_pig](https://twitter.com/furandon_pig)
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 自己紹介
+
+<img src="https://pbs.twimg.com/profile_images/2577120213/74t8gdwg96vj93vg46a4_200x200.png" width="80" height="80">&nbsp;[@furandon_pig](https://twitter.com/furandon_pig)
+
+<p>
+小さなWebアプリを細々と作っています。
+
+ * [ぬりえアプリ](https://furandon-pig.github.io/nurie/)
+ * [Brocco.graph](https://furandon-pig.github.io/fpig_sample/hobby/brocco_graph/)
+ * [ジャンプ作家風 巻末コメントアプリ](https://furandon-pig.github.io/jump_comment_app/)
+ * [セリフ書き込みアプリ](https://furandon-pig.github.io/mmr-kitsune-san/)
+</p>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 今日のお話
+
+ * Amazon RDSでPostgreSQLのインスタンス作成時にハマった話をします&#x1f642;
+ * PostgreSQLそのものの話は出てきません...&#x1f97a;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### Amazon RDS？
+
+ * [Amazon RDS](https://aws.amazon.com/jp/rds/)
+   * Amazon Relational Database Service
+   * マネージドなRDBMSサービス
+ * DBインスタンスの作成・削除・スケーリングが容易に行える
+ * PostgreSQL,MySQL,Oracle,SQL Server等のRDBMSが利用可能
+ * AWS CLIからも操作可能
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### AWS CLIでのRDSインスタンス作成
+
+```sh
+$ aws rds create-db-instance \
+     --db-instance-identifier sample-rds \
+     --db-instance-class db.t2.micro \
+     --engine postgres \
+     --engine-version 13.2 \
+     --allocated-storage 40 \
+     --master-username postgres \
+     --master-user-password '<DBパスワード>' \
+     --backup-retention-period 1 \
+     --vpc-security-group-ids <セキュリティグループID> \
+     --publicly-accessible \
+     --db-subnet-group-name <サブネットグループ名>
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f97a;
+
+An error occurred (InvalidParameterCombination) when calling 
+the CreateDBInstance operation: <span class="my_marker">RDS does not support creating 
+a DB instance with the following combination: 
+DBInstanceClass=db.t2.micro, Engine=postgres, 
+EngineVersion=13.2, LicenseModel=postgresql-license.</span>
+For supported combinations of instance class 
+and database engine version, see the documentation.
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f610;
+
+ * [Amazon Aurora DB インスタンスのインスタンスクラスを変更またはスケーリングするときにエラーが発生したのはなぜですか？](https://aws.amazon.com/jp/premiumsupport/knowledge-center/aurora-mysql-instance-class-error/)
+
+このエラーは、<span class="my_marker">インスタンスが実行されている AZ の Aurora エンジン
+およびエンジンバージョンでターゲットインスタンスクラスが
+サポートされていない</span>場合に表示されます。
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f603;
+
+エンジン、エンジンバージョン、インスタンスクラスをサポートする AZ を確認するには、次のコマンドを実行します。
+
+```sh
+aws rds describe-orderable-db-instance-options \
+  --engine <engine_name> \
+  --engine-version <engine_version> \
+  --db-instance-class <instance_class> \
+  --query 'OrderableDBInstanceOptions[].AvailabilityZones'
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f610;
+
+```sh
+$ aws rds describe-orderable-db-instance-options \
+    --engine postgres \
+    --engine-version 13.2 \
+    --db-instance-class db.t2.micro \
+    --query 'OrderableDBInstanceOptions[].AvailabilityZones'
+[]
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### RDS作成時のDBサブネット
+
+ * 2つのAvailability Zoneにまたがる形で作成する。
+
+```sh
+$ # サブネットの確認。
+$ aws ec2 describe-subnets \
+    --subnet-ids subnet-AAAAAAAA subnet-BBBBBBBB \
+  | jq -r '.Subnets[] | .SubnetId, .AvailabilityZone, .VpcId' \
+  | paste - - - -
+subnet-AAAAAAAA ap-northeast-1a vpc-CCCCCCCC
+subnet-BBBBBBBB ap-northeast-1c vpc-DDDDDDDD
+$
+$ # DBサブネットは2つのAvailabilityZoneにまたがる形で作成する必要がある。
+$ aws rds create-db-subnet-group \
+    --db-subnet-group-name <サブネットグループ名> \
+    --db-subnet-group-description <サブネットグループの説明> \
+    --subnet-ids subnet-AAAAAAAA subnet-BBBBBBBB
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### というワケで
+
+ * RDSを作成するAvailability Zoneにおいて
+   * 常に最新のRDSバージョンが利用できるわけではない...&#x1f97a;
+ * 指定可能なRDSバージョンの組み合わせに注意が必要
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+# &#x1f97a;
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### 指定可能なRDSバージョンを調べる
+
+```sh
+$ # RDSのバージョンリストを抽出する。
+$ aws rds describe-db-engine-versions \
+    | jq -r '.DBEngineVersions[] | .EngineVersion, .Engine' \
+    | paste - - \
+    | sort -nr \
+    | grep postgres \
+    | head -n10 \
+    | awk '{ print $1 }' \
+    | sort \
+    | uniq \
+    > $$.tmp.txt
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f610;
+
+```sh
+$ cat *.tmp.txt
+12.6
+12.7
+12.8
+13.1
+13.2
+13.3
+13.4
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f928;
+
+```sh
+$ # 各RDSバージョンが利用できるAvailability Zoneを抽出し、
+$ # ap-northeast-1aまたはap-northeast-1dが含まれものを確認する。
+$ for version in `cat $$.tmp.txt`
+  do
+    echo "===> $version"
+    aws rds describe-orderable-db-instance-options \
+        --engine postgres \
+        --engine-version $version \
+        --db-instance-class db.t2.micro \
+        --query 'OrderableDBInstanceOptions[].AvailabilityZones' \
+    | jq -r '.[][] | select(.Name == "ap-northeast-1a" or .Name == "ap-northeast-1d") | .Name' \
+    | egrep -v '{|}' \
+    | sort \
+    | uniq
+  done
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### &#x1f603;
+
+ * PostgreSQLのバージョン `12.8` を指定すれば良さそう！
+
+```sh
+===> 12.6
+ap-northeast-1a
+ap-northeast-1d
+===> 12.7
+ap-northeast-1a
+ap-northeast-1d
+===> 12.8
+ap-northeast-1a
+ap-northeast-1d
+===> 13.1
+===> 13.2
+===> 13.3
+===> 13.4
+```
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### これで解決&#x1f642;
+
+```sh
+$ aws rds create-db-instance \
+     --db-instance-identifier sample-rds \
+     --db-instance-class db.t2.micro \
+     --engine postgres \
+     --engine-version 12.8 \  # ★★★
+     --allocated-storage 40 \
+     --master-username postgres \
+     --master-user-password '<DBパスワード>' \
+     --backup-retention-period 1 \
+     --vpc-security-group-ids <セキュリティグループID> \
+     --publicly-accessible \
+     --db-subnet-group-name <サブネットグループ名>
+```
+                       </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+### まとめ
+
+<span style="font-size: 70%;">
+
+ * Amazon RDSでPostgreSQLインスタンスを作成
+ * インスタンス作成時のパラメータの組合せに注意
+   * 必ずしも最新のDBバージョンが指定できるワケではない
+ * AWS CLIからRDSを操作する場合にはエラーとなることがある
+ * あらかじめ指定可能なバージョンを把握しておくと良い
+
+</span>
+                        </textarea>
+                    </section>
+
+                    <section data-markdown>
+                        <textarea data-template>
+## ご清聴ありがとうございました&#x1f603;
+                        </textarea>
+                    </section>
+
+                </div>
+            </div>
+
+		<script src="/study-memo/reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: '/study-memo/reveal.js/plugin/markdown/marked.js' },
+					{ src: '/study-memo/reveal.js/plugin/markdown/markdown.js' },
+					{ src: '/study-memo/reveal.js/plugin/highlight/highlight.js' },
+					{ src: '/study-memo/reveal.js/plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
