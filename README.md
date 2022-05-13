@@ -1,6 +1,8 @@
 # study-memo
 勉強会のメモや発表スライドを置いてあるリポジトリです。
 
+ * [【CROSS Party online 2022 mini 】#1 テーマ：筋トレ](https://cross-party.connpass.com/event/244528/)
+   * [いかにして私は筋トレを始めるに至ったか～いちばんツラいのはサイドレイズ～](https://furandon-pig.github.io/study-memo/docs/cross-party/20220513/20220513.html)
  * [【初心者歓迎】PostgreSQL LT会@オンライン](https://uniquevision.connpass.com/event/227223/)([ユニークビジョン株式会社](https://uniquevision.connpass.com/))
    * [Amazon RDS＋PostgreSQLで指定可能なengine-versionを見つけよう！](https://furandon-pig.github.io/study-memo/docs/UV_study/20211026/20211026.html)
  * [IoT縛りの勉強会! IoTLT](https://iotlt.connpass.com/)
